@@ -14,16 +14,19 @@ class Interval:
         if lo.isnan() or hi.isnan():
             raise ValueError("NaN Endpoints are Invalid")
 
-        object.__setattr__(self, "lo", lo)
-        object.__setattr__(self, "hi", hi)
-
         if lo > hi:
             lo = Number('inf')
             hi = Number('-inf')
 
+        object.__setattr__(self, "lo", lo)
+        object.__setattr__(self, "hi", hi)
+
     @classmethod
     def empty(cls):
         return cls(Number('inf'), Number('-inf'))
+    @classmethod
+    def entire(cls):
+        return cls(Number('-inf'), Number('inf'))
 
     @property
     def is_empty(self):
@@ -55,6 +58,8 @@ class Interval:
     def midpoint(self):
         if self.is_empty:
             return Number("nan")
+        if not self.is_bounded:
+            return Number('nan')
         else:
             return self.lo + (self.hi - self.lo) / 2
 
@@ -69,13 +74,9 @@ class Interval:
             return True
         if other.is_empty:
             return False
-        return other.lo =< self.lo and other.hi >= self.hi
+        return other.lo <= self.lo and other.hi >= self.hi
     
     def proper_subset(self, other):
-        if self.is_empty:
-            return True
-        if other.is_empty:
-            return False
         return self.subset(other) and self != other
     
     def overlaps(self, other):
@@ -86,14 +87,50 @@ class Interval:
     def intersection(self, other):
         if self.is_empty or other.is_empty:
             return Interval.empty()
-        return Interval(max(self.lo, other.lo), min(self.hi, other.hi)
+        return Interval(max(self.lo, other.lo), min(self.hi, other.hi))
+    
     def hull(self, other):
         if self.is_empty:
             return other
         if other.is_empty:
             return self
+        return Interval(min(self.lo, other.lo), max(self.hi, other.hi))
 
-        return Interval(min(self.lo, other.lo), max(self.hi, other.hi)
+    def __repr__(self):
+        if self.is_empty:
+            return "Interval.empty()"
+        return f"Interval({self.lo}, {self.hi})"
+
+    def disjoint(self, other):
+        return not self.overlaps(other)
+
+    def interior_contains(self, x):
+        if self.is_empty:
+            return False
+        x = Number(x)
+        return self.lo < x < self.hi
+
+    def interior_subset(self, other):
+        if self.is_empty:
+            return True
+        if other.is_empty:
+            return False
+
+        return other.lo < self.lo and self.hi < other.hi
+
+    def precedes(self, other):
+        if self.is_empty or other.is_empty:
+            return False
+        return self.hi < other.lo
+
+    def meets(self, other):
+        if self.is_empty or other.is_empty:
+            return False
+        return self.hi == other.lo or other.hi == self.lo
+
+    
+
+                  
 
 
     
