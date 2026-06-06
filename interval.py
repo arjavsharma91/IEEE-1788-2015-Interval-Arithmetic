@@ -70,6 +70,8 @@ class Interval:
         return self.lo <= x <= self.hi
 
     def subset(self, other):
+        if not isinstance(other, Interval):
+            raise TypeError("Expected Interval")
         if self.is_empty:
             return True
         if other.is_empty:
@@ -77,19 +79,27 @@ class Interval:
         return other.lo <= self.lo and other.hi >= self.hi
     
     def proper_subset(self, other):
+        if not isinstance(other, Interval):
+            raise TypeError("Expected Interval")
         return self.subset(other) and self != other
     
     def overlaps(self, other):
+        if not isinstance(other, Interval):
+            raise TypeError("Expected Interval")
         if self.is_empty or other.is_empty:
             return False
         return max(other.lo, self.lo) <= min(self.hi, other.hi)
 
     def intersection(self, other):
+        if not isinstance(other, Interval):
+            raise TypeError("Expected Interval")
         if self.is_empty or other.is_empty:
             return Interval.empty()
         return Interval(max(self.lo, other.lo), min(self.hi, other.hi))
     
     def hull(self, other):
+        if not isinstance(other, Interval):
+            raise TypeError("Expected Interval")
         if self.is_empty:
             return other
         if other.is_empty:
@@ -102,15 +112,21 @@ class Interval:
         return f"Interval({self.lo}, {self.hi})"
 
     def disjoint(self, other):
+        if not isinstance(other, Interval):
+            raise TypeError("Expected Interval")
         return not self.overlaps(other)
 
     def interior_contains(self, x):
+        if not isinstance(other, Interval):
+            raise TypeError("Expected Interval")
         if self.is_empty:
             return False
         x = Number(x)
         return self.lo < x < self.hi
 
     def interior_subset(self, other):
+        if not isinstance(other, Interval):
+            raise TypeError("Expected Interval")
         if self.is_empty:
             return True
         if other.is_empty:
@@ -128,8 +144,29 @@ class Interval:
             return False
         return self.hi == other.lo or other.hi == self.lo
 
-    
+    def __add__(self, other):
+        from .arithmetic import add
+        if not isinstance(other, Interval):
+            other = Interval(other, other)
+        return add(self, other)
 
+    def __sub__(self, other):
+        from .arithmetic import sub
+        if not isinstance(other, Interval):
+            other = Interval(other, other)
+        return sub(self, other)
+
+    def __mul__(self, other):
+        from .arithmetic import mul
+        if not isinstance(other, Interval):
+            other = Interval(other, other)
+        return mul(self, other)
+
+    def __truediv__(self, other):
+        from .arithmetic import div
+        if not isinstance(other, Interval):
+            other = Interval(other, other)
+        return div(self, other)
                   
 
 
