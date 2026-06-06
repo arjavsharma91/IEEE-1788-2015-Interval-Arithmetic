@@ -167,7 +167,11 @@ class Interval:
         if not isinstance(other, Interval):
             other = Interval(other, other)
         return div(self, other)
-                  
+
+    def __neg__(self):
+        if self.is_empty:
+            return Interval.empty()
+        return Interval(-self.hi, -self.lo)
 
 
     
