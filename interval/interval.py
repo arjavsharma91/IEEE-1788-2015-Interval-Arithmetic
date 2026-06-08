@@ -33,7 +33,11 @@ class Interval:
         if isinstance(value, cls):
             return value
         return cls(value, value)
-
+    
+    @property
+    def is_common(self):
+        return not self.is_empty and self.is_bounded
+    
     @property
     def is_empty(self):
         return self.lo > self.hi
