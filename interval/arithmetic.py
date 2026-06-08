@@ -55,5 +55,9 @@ def reciprocal(x: Interval) -> Interval:
 def div(x: Interval, y: Interval) -> Interval:
   if x.is_empty or y.is_empty:
     return Interval.empty()
+
+  if y.contains(0):
+    return Interval.entire()
+  
   return mul(x, reciprocal(y))
   
