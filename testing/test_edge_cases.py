@@ -1,3 +1,6 @@
+from intervals.interval import Interval
+from intervals.arithmetic import add, sub, mul, div
+
 EDGE_CASES = [
   Interval.empty(),
   Interval.entire(),
