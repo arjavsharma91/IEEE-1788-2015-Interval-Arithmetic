@@ -1,4 +1,4 @@
-from gmpy2 import RoundDown, RoundUp, context, get_context, exp, log
+from gmpy2 import RoundDown, RoundUp, context, get_context, exp, log, mpfr, sin, cos
 Number = mpfr
 
 def add_down(a, b):
@@ -118,3 +118,27 @@ def root_down(a, n):
         if a < 0 and n % 2 == 1:
             return -root_up(-a, n)
         return a ** (mpfr(1) / n)
+
+def sin_up(a):
+    a = Number(a)
+    with context(get_context()) as ctx:
+        ctx.round = RoundUp
+        return sin(a)
+
+def sin_down(a):
+    a = Number(a)
+    with context(get_context()) as ctx:
+        ctx.round = RoundDown
+        return sin(a)
+
+def cos_down(a):
+    a = Number(a)
+    with context(get_context()) as ctx:
+        ctx.round = RoundDown
+        return cos(a)
+
+def sin_up(a):
+    a = Number(a)
+    with context(get_context()) as ctx:
+        ctx.round = RoundUp
+        return cos(a)
