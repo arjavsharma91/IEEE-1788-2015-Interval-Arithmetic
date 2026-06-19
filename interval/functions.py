@@ -4,6 +4,8 @@ from gmpy2 import mpfr, floor, ceil
 from .arithmetic import reciprocal
 from .constants import PI, TWO_PI, HALF_PI
 
+Number = mpfr
+
 def sqrt(x: Interval) -> Interval:
   x = Interval._coerce(x)
   if x.is_empty:
@@ -11,13 +13,13 @@ def sqrt(x: Interval) -> Interval:
   if x.hi < 0:
     return Interval.empty()
   lo = max(x.lo, mpfr(0))
-  return Interval(sqrt_down(lo), sqrt_up(hi))
+  return Interval(sqrt_down(lo), sqrt_up(x.hi))
 
 def exp(x) -> Interval:
   x = Interval._coerce(x)
   if x.is_empty:
     return Interval.empty()
-  return Interval(exp_down(self.lo), exp_up(self.hi))
+  return Interval(exp_down(x.lo), exp_up(x.hi))
 
 def log(x) -> Interval:
   x = Interval._coerce(x)
@@ -53,12 +55,15 @@ def pow_int(x, n):
       lo = pow_down(abs(x.hi), n)
       hi = pow_up(abs(x.lo), n)
       return Interval(lo, hi)
-    hi = max(pow_up(abs(x.hi), n), pow_up(abs(x.lo)), n)
+    hi = max(
+    pow_up(abs(x.hi), n),
+    pow_up(abs(x.lo), n)
+    )
     return Interval(mpfr(0), hi)
 
 def sign(x) -> Interval:
   x = Interval._coerce(x)
-  if interval.is_empty:
+  if x.is_empty:
     return Interval.empty()
   if x.lo > 0:
     return Interval(Number(1), Number(1))
@@ -79,7 +84,7 @@ def interval_min(x, y) -> Interval:
     return Interval.empty()
   return Interval(min(x.lo, y.lo), min(x.hi, y.hi))
 
-def interval_min(x, y) -> Interval:
+def interval_max(x, y) -> Interval:
   x = Interval._coerce(x)
   y = Interval._coerce(y)
   if x.is_empty or y.is_empty:
@@ -102,7 +107,7 @@ def nth_root(x, n) -> Interval:
 def contains_periodic_point(x, offset, period):
   lower = (x.lo - offset) / period
   higher = (x.hi - offset) / period
-  return ceil(lower) <= floor(upper)
+  return ceil(lower) <= floor(higher)
 
 
 def sin(x) -> Interval:
@@ -116,7 +121,7 @@ def sin(x) -> Interval:
   t1 = sin_up(x.lo)
   t2 = sin_up(x.hi)
   lo = min(s1, s2)
-  hi = min(t1, t2)
+  hi = max(t1, t2)
 
   if contains_periodic_point(x, HALF_PI, TWO_PI):
     hi = mpfr(1)
@@ -138,12 +143,12 @@ def tan(x):
     return Interval.empty()
   if contains_periodic_point(x, HALF_PI, PI):
     return Interval.entire()
-  lo = tan_down(x)
-  hi = tan_up(x)
+  lo = tan_down(x.lo)
+  hi = tan_up(x.hi)
   return Interval(lo, hi)
 
 def asin(x):
-  x = interval._coerce(x)
+  x = Interval._coerce(x)
   if x.is_empty:
     return Interval.empty()
   x = x.intersection(Interval(-1, 1))
@@ -152,8 +157,8 @@ def asin(x):
     return Interval.empty()
   return Interval(asin_down(x.lo), asin_up(x.hi))
 
-def acox(x):
-  x = interval._coerce(x)
+def acos(x):
+  x = Interval._coerce(x)
   if x.is_empty:
     return Interval.empty()
   x = x.intersection(Interval(-1, 1))
