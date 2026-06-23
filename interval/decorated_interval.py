@@ -30,6 +30,7 @@ class DecoratedInterval:
   def nai(cls):
     return cls(Interval.empty(), Decoration.ILL, nai = True)
 
+  @classmethod
   def _coerce(cls, value):
     if isinstance(value, cls):
       return value
@@ -45,3 +46,87 @@ class DecoratedInterval:
       return cls(value, dec)
 
     return cls._coerce(Interval._coerce(value))
+
+  @property
+  def is_nai(self):
+    return self.nai
+
+  @property
+  def is_empty(self):
+    return self.interval.is_empty()
+
+  @property
+  def is_entire(self):
+    return self.interval.is_entire()
+
+  @property
+  def width(self):
+    return self.interval.width
+
+  @property
+  def radius(self):
+    return self.interval.radius
+
+  @property
+  def midpoint(self):
+    return self.interval.midpoint
+
+  @property
+  def magnitude(self):
+    return self.interval.magnitude
+
+  @property
+  def mignitude(self):
+    return self.interval.mignitude
+
+  def contains(self, x):
+    return self.interval.contains(x)
+
+  def __repr__(self):
+    if self.nai:
+      return "DecoratedInterval(NaI)"
+
+    return (
+      f"DecoratedInterval("
+      f"{self.interval}, "
+      f"{str(self.decoration)})")
+
+  def __add__(self, other):
+    from .decorated_arithmetic import add
+    other = self._coerce(other)
+    return add(self, other)
+
+  def __sub__(self, other):
+    from .decorated_arithmetic import sub
+    other = self._coerce(other)
+    return sub(self, other)
+
+  def __mul__(self, other):
+    from .decorated_arithmetic import mul
+    other = self._coerce(other)
+    return mul(self, other)
+
+  def __truediv__(self, other):
+    from .decorated_arithmetic import div
+    other = self._coerce(other)
+    return div(self, other)
+
+  def __radd__(self, other):
+    from .decorated_arithmetic import add
+    other = self._coerce(other)
+    return add(other, self)
+
+  def __rsub__(self, other):
+    from .decorated_arithmetic import sub
+    other = self._coerce(other)
+    return sub(other, self)
+
+  def __rmul__(self, other):
+    from .decorated_arithmetic import mul
+    other = self._coerce(other)
+    return mul(other, self)
+
+  def __rtruediv__(self, other):
+    from .decorated_arithmetic import div
+    other = self._coerce(other)
+    return div(other, self)
