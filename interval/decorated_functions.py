@@ -129,3 +129,104 @@ def nth_root(x, n):
     dec = Decoration.DAC
 
   return DecoratedInterval(interval, dec)
+
+def sin(x):
+  x = DecoratedInterval._coerce(x)
+  if x.is_nai:
+    return DecoratedInterval.new_nai()
+  op_dec = Decoration.COM
+
+  interval = bare_sin(x)
+  dec = combine(op_dec, x.decoration)
+
+  if dec == Decoration.COM and not interval.is_bounded:
+    dec = Decoration.DAC
+
+  return DecoratedInterval(interval, dec)
+
+
+def cos(x):
+  x = DecoratedInterval._coerce(x)
+  if x.is_nai:
+    return DecoratedInterval.new_nai()
+  op_dec = Decoration.COM
+
+  interval = bare_cos(x)
+  dec = combine(op_dec, x.decoration)
+
+  if dec == Decoration.COM and not interval.is_bounded:
+    dec = Decoration.DAC
+
+  return DecoratedInterval(interval, dec)
+
+def tan(x):
+  x = DecoratedInterval._coerce(x)
+  if x.is_nai:
+    return DecoratedInterval.new_nai()
+
+  if bare_contains_periodic_point(x.interval, HALF_PI, PI):
+    op_dec = Decoration.TRV
+  else:
+    op_dec = Decoration.COM
+
+  interval = bare_tan(x.interval)
+  dec = combine(x.decoration, op_dec)
+
+  if dec == Decoration.COM and not interval.is_bounded:
+    dec = Decoration.DAC
+
+  return DecoratedInterval(interval, dec)
+
+def asin(x):
+  x = DecoratedInterval._coerce(x)
+  if x.is_nai:
+    return DecoratedInterval.new_nai()
+
+  if x.interval.hi < -1 or x.interval.lo > 1:
+    return DecoratedInterval.empty()
+  elif x.interval.lo < -1 or x.interval.hi > 1:
+    op_dec = Decoration.TRV
+  else:
+    op_dec = Decoration.COM
+
+  interval = bare_asin(x)
+  dec = combine(x.decoration, op_dec)
+
+  if dec == Decoration.COM and not interval.is_bounded:
+    dec = Decoration.DAC
+
+  return DecoratedInterval(interval, dec)
+
+def asin(x):
+  x = DecoratedInterval._coerce(x)
+  if x.is_nai:
+    return DecoratedInterval.new_nai()
+
+  if x.interval.hi < -1 or x.interval.lo > 1:
+    return DecoratedInterval.empty()
+  elif x.interval.lo < -1 or x.interval.hi > 1:
+    op_dec = Decoration.TRV
+  else:
+    op_dec = Decoration.COM
+
+  interval = bare_acos(x)
+  dec = combine(x.decoration, op_dec)
+
+  if dec == Decoration.COM and not interval.is_bounded:
+    dec = Decoration.DAC
+
+  return DecoratedInterval(interval, dec)
+
+def atan(x):
+  x = DecoratedInterval._coerce(x)
+  if x.is_nai:
+    return DecoratedInterval.is_nai()
+  op_dec = Decoration.COM
+
+  interval = bare_atan(x.interval)
+  dec = combine(x.decoration, op_dec)
+
+  if dec == Decoration.COM and not interval.is_bounded:
+    dec = Decoration.DAC
+
+  return DecoratedInterval(interval, dec)
