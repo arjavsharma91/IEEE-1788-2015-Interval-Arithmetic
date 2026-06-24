@@ -273,3 +273,55 @@ def tanh(x):
 
   return DecoratedInterval(interval, dec)
   
+def asinh(x):
+  x = DecoratedInterval._coerce(x)
+  if x.is_nai:
+    return DecoratedInterval.new_nai()
+  op_dec = Decoration.COM
+
+  interval = bare_asinh(x.interval)
+  dec = combine(x.decoration, op_dec)
+
+  if dec == Decoration.COM and not interval.is_bounded:
+    dec = Decoration.DAC
+
+  return DecoratedInterval(interval, dec)
+
+def acosh(x):
+  x = DecoratedInterval._coerce(x)
+  if x.is_nai:
+    return DecoratedInterval.new_nai()
+  if x.interval.hi < 1:
+    return DecoratedInterval.empty()
+  elif x.interval.lo < 1:
+    op_dec = Decoration.TRV
+  else:
+    op_dec = Decoration.COM
+
+  interval = bare_acosh(x.interval)
+  dec = combine(x.decoration, op_dec)
+
+  if dec == Decoration.COM and not interval.is_bounded:
+    dec = Decoration.DAC
+
+  return DecoratedInterval(interval, dec)
+
+def atanh(x):
+  x = DecoratedInterval._coerce(x)
+  if x.is_nai:
+    return DecoratedInterval.new_nai()
+
+  if x.interval.hi <= -1 or x.interval.lo >= 1:
+    return DecoratedInterval.empty()
+  elif x.interval.lo <= -1 or x.interval.hi >= 1:
+    op_dec = Decoration.TRV
+  else:
+    op_dec = Decoration.COM
+
+  interval = bare_atanh(x.interval)
+  dec = combine(x.decoration, op_dec)
+
+  if dec == Decoration.COM and not interval.is_bounded:
+    dec = Decoration.DAC
+
+  return DecoratedInterval(interval, dec)
