@@ -14,6 +14,9 @@ class DecoratedInterval:
     if not isinstance(self.decoration, Decoration):
       raise TypeError("Expected Decoration")
 
+    if self.interval.is_empty and not self.nai:
+      object.__setattr__(self, "decoration", Decoration.TRV)
+    
     if self.nai:
       if self.decoration != Decoration.ILL:
         raise ValueError("NaI must have decoration ILL")
@@ -27,7 +30,7 @@ class DecoratedInterval:
     return cls(Interval.entire(), Decoration.TRV)
 
   @classmethod
-  def nai(cls):
+  def new_nai(cls):
     return cls(Interval.empty(), Decoration.ILL, nai = True)
 
   @classmethod
@@ -37,15 +40,14 @@ class DecoratedInterval:
 
     if isinstance(value, Interval):
       if value.is_empty:
-        dec = Decoration.TRV
-      elif value.is_bounded:
-        dec = Decoration.COM
-      else:
-        dec = Decoration.DAC
+        return cls(value, Decoration.TRV)
+      return cls(value, Decoration.DAC)
 
-      return cls(value, dec)
-
-    return cls._coerce(Interval._coerce(value))
+    try:
+      bare_interval = Interval._coerce(value)
+      return cls._coerce(bare_interval)
+    except Exception as e:
+      return cls.new_nai()
 
   @property
   def is_nai(self):
@@ -53,11 +55,11 @@ class DecoratedInterval:
 
   @property
   def is_empty(self):
-    return self.interval.is_empty()
+    return self.interval.is_empty
 
   @property
   def is_entire(self):
-    return self.interval.is_entire()
+    return self.interval.is_entire
 
   @property
   def width(self):
@@ -93,40 +95,56 @@ class DecoratedInterval:
 
   def __add__(self, other):
     from .decorated_arithmetic import add
+    if self.is_nai or other.is_nai:
+      return DecoratedInterval.new_nai()
     other = self._coerce(other)
     return add(self, other)
 
   def __sub__(self, other):
     from .decorated_arithmetic import sub
+    if self.is_nai or other.is_nai:
+      return DecoratedInterval.new_nai()
     other = self._coerce(other)
     return sub(self, other)
 
   def __mul__(self, other):
     from .decorated_arithmetic import mul
+    if self.is_nai or other.is_nai:
+      return DecoratedInterval.new_nai()
     other = self._coerce(other)
     return mul(self, other)
 
   def __truediv__(self, other):
     from .decorated_arithmetic import div
+    if self.is_nai or other.is_nai:
+      return DecoratedInterval.new_nai()
     other = self._coerce(other)
     return div(self, other)
 
   def __radd__(self, other):
     from .decorated_arithmetic import add
+    if self.is_nai or other.is_nai:
+      return DecoratedInterval.new_nai()
     other = self._coerce(other)
     return add(other, self)
 
   def __rsub__(self, other):
     from .decorated_arithmetic import sub
+    if self.is_nai or other.is_nai:
+      return DecoratedInterval.new_nai()
     other = self._coerce(other)
     return sub(other, self)
 
   def __rmul__(self, other):
     from .decorated_arithmetic import mul
+    if self.is_nai or other.is_nai:
+      return DecoratedInterval.new_nai()
     other = self._coerce(other)
     return mul(other, self)
 
   def __rtruediv__(self, other):
     from .decorated_arithmetic import div
+    if self.is_nai or other.is_nai:
+      return DecoratedInterval.new_nai()
     other = self._coerce(other)
     return div(other, self)
