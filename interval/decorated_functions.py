@@ -230,3 +230,46 @@ def atan(x):
     dec = Decoration.DAC
 
   return DecoratedInterval(interval, dec)
+
+def sinh(x):
+  x = DecoratedInterval._coerce(x)
+  if x.is_nai:
+    return DecoratedInterval.new_nai()
+  op_dec = Decoration.COM
+
+  interval = bare_sinh(x.interval)
+  dec = combine(x.decoration, op_dec)
+
+  if dec == Decoration.COM and not interval.is_bounded:
+    dec = Decoration.DAC
+
+  return DecoratedInterval(interval, dec)
+
+def cosh(x):
+  x = DecoratedInterval._coerce(x)
+  if x.is_nai:
+    return DecoratedInterval.new_nai()
+  op_dec = Decoration.COM
+
+  interval = bare_cosh(x.interval)
+  dec = combine(x.decoration, op_dec)
+
+  if dec == Decoration.COM and not interval.is_bounded:
+    dec = Decoration.DAC
+
+  return DecoratedInterval(interval, dec)
+
+def tanh(x):
+  x = DecoratedInterval._coerce(x)
+  if x.is_nai:
+    return DecoratedInterval.new_nai()
+  op_dec = Decoration.COM
+
+  interval = bare_tanh(x.interval)
+  dec = combine(x.decoration, op_dec)
+
+  if dec == Decoration.COM and not interval.is_bounded:
+    dec = Decoration.DAC
+
+  return DecoratedInterval(interval, dec)
+  
