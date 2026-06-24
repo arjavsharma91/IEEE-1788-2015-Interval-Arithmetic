@@ -1,5 +1,5 @@
 from .interval import Interval
-from .rounding import add_up, add_down, sub_up, sub_down, mul_up, mul_down, div_up, div_down, sqrt_up, sqrt_down, exp_down, exp_up, log_up, log_down, pow_up, pow_down, root_up, root_down, sin_up, sin_down, tan_up, tan_down
+from .rounding import add_up, add_down, sub_up, sub_down, mul_up, mul_down, div_up, div_down, sqrt_up, sqrt_down, exp_down, exp_up, log_up, log_down, pow_up, pow_down, root_up, root_down, sin_up, sin_down, tan_up, tan_down, asin_up, asin_down, acos_up, acos_down, atan_up, atan_down, sinh_up, sinh_down, cosh_up, cosh_down, tanh_up, tanh_down, atanh_up, atanh_down, asinh_up, asinh_down, acosh_up, acosh_down
 from gmpy2 import mpfr, floor, ceil
 from .arithmetic import reciprocal
 from .constants import PI, TWO_PI, HALF_PI
@@ -190,3 +190,55 @@ def atan(x):
     atan_up(x.hi)
     )
 
+def sinh(x):
+  x = Interval._coerce(x)
+  if x.is_empty:
+    return Interval.empty()
+  return Interval(sinh_down(x.lo), sinh_up(x.hi))
+
+def tanh(x):
+  x = Interval._coerce(x)
+  if x.is_empty():
+    return Interval.empty()
+  return Interval(tanh_down(x.lo), tanh_up(x.hi))
+
+def cosh(x):
+  x = Interval._coerce(x)
+  if x.is_empty():
+    return Interval.empty()
+
+  if x.lo >= 0:
+    return Interval(cosh_down(x.lo), cosh_up(x.hi))
+  if x.hi <= 0:
+    return Interval(cosh_down(x.hi), cosh_up(x.lo))
+
+def asinh(x) -> Interval:
+  x = Interval._coerce(x)
+  if x.is_empty:
+    return Interval.empty()
+  return Interval(asinh_down(x.lo), asinh_up(x.hi))
+
+def acosh(x) -> Interval:
+  x = Interval._coerce(x)
+  if x.is_empty:
+    return Interval.empty()
+  if x.hi < 1:
+    return Interval.empty()
+        
+
+  lo = max(x.lo, mpfr(1))
+  return Interval(acosh_down(lo), acosh_up(x.hi))
+
+def atanh(x) -> Interval:
+  x = Interval._coerce(x)
+  if x.is_empty:
+    return Interval.empty()
+    
+  x = x.intersection(Interval(-1, 1))
+  if x.is_empty:
+    return Interval.empty()
+        
+  lo = mpfr('-inf') if x.lo == -1 else atanh_down(x.lo)
+  hi = mpfr('inf') if x.hi == 1 else atanh_up(x.hi)
+    
+  return Interval(lo, hi)
