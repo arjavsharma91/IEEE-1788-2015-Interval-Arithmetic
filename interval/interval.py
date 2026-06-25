@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from gmpy2 import mpfr
+import re
 
 Number = mpfr
 @dataclass(frozen = True)
@@ -33,6 +34,30 @@ class Interval:
         if isinstance(value, cls):
             return value
         return cls(value, value)
+
+    @classmethod
+    def from_string(cls, s: str):
+        s = s.strip().lower()
+
+        if s in ("[]", "[empty]"):
+            return cls.empty()
+        if s == "[entire]":
+            return cls(mpfr('-inf'), mpfr('inf'))
+        match = re.match(r"^\[\s*([^,]+)\s*,\s*([^\]]+)\s*\]$", s)
+        if not match:
+            raise ValueError("Malformed Interval String: {s}")
+
+        str_lo, str_hi = match.group(1).strip(), match.group(2).strip()
+
+        with context(get_context()) as ctx:
+            ctx.round = RoundDown
+            lo = mpfr(str_lo)
+
+        with context(get_context()) as ctx:
+            ctx.round = RoundUp
+            hi = mpfr(str_hi)
+
+        return cls(lo, hi)
     
     @property
     def is_common(self):
