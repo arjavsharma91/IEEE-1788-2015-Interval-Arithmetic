@@ -105,8 +105,8 @@ def nth_root(x, n) -> Interval:
   return Interval(root_down(lo, n), root_up(x.hi, n))
 
 def contains_periodic_point(x, offset, period):
-  lower = div_down(sub_down(x.lo - offset), period)
-  higher = div_up(sub_up(x.hi - offset), period)
+  lower = div_down(sub_down(x.lo, offset), period)
+  higher = div_up(sub_up(x.hi, offset), period)
   return ceil(lower) <= floor(higher)
 
 
@@ -198,19 +198,20 @@ def sinh(x):
 
 def tanh(x):
   x = Interval._coerce(x)
-  if x.is_empty():
+  if x.is_empty:
     return Interval.empty()
   return Interval(tanh_down(x.lo), tanh_up(x.hi))
 
 def cosh(x):
   x = Interval._coerce(x)
-  if x.is_empty():
+  if x.is_empty:
     return Interval.empty()
 
   if x.lo >= 0:
     return Interval(cosh_down(x.lo), cosh_up(x.hi))
   if x.hi <= 0:
     return Interval(cosh_down(x.hi), cosh_up(x.lo))
+  return Interval(mpfr(1), max(cosh_up(x.lo), cosh_up(x.hi)))
 
 def asinh(x) -> Interval:
   x = Interval._coerce(x)
@@ -238,8 +239,8 @@ def atanh(x) -> Interval:
   if x.is_empty:
     return Interval.empty()
         
-  lo = mpfr('-inf') if x.lo == -1 else atanh_down(x.lo)
-  hi = mpfr('inf') if x.hi == 1 else atanh_up(x.hi)
+  lo = mpfr('-inf') if x.lo <= -1 else atanh_down(x.lo)
+  hi = mpfr('inf') if x.hi >= 1 else atanh_up(x.hi)
     
   return Interval(lo, hi)
 
@@ -265,17 +266,11 @@ def atan2(x, y):
   if y.lo == 0 and y.hi == 0 and x.lo == 0 and x.hi == 0:
         return Interval.empty()
 
-  if x.lo < 0 and y.lo < 0 and y.hi > 0:
-    with context(get_context()) as ctx:
-      ctx.round = RoundDown
-      lo = -PI
-    with context(get_context()) as ctx:
-      ctx.round = RoundUp
-      hi = PI
-    return Interval(lo, hi)
+  if x.hi < 0 and y.lo < 0 and y.hi > 0:
+    return Interval(-PI, PI)
 
-  c1_lo, c1_up = atan2_down(y.lo, x.lo), atan2_up(y.lo, x.lo)
-  c2_lo, c2_up = atan2_down(y.lo, x.hi), atan2_up(y.lo, x.hi)
+  c1_lo, c1_hi = atan2_down(y.lo, x.lo), atan2_up(y.lo, x.lo)
+  c2_lo, c2_hi = atan2_down(y.lo, x.hi), atan2_up(y.lo, x.hi)
   c3_lo, c3_hi = atan2_down(y.hi, x.lo), atan2_up(y.hi, x.lo)
   c4_lo, c4_hi = atan2_down(y.hi, x.hi), atan2_up(y.hi, x.hi)
 
