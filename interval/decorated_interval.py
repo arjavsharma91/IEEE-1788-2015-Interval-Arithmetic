@@ -49,6 +49,27 @@ class DecoratedInterval:
     except Exception as e:
       return cls.new_nai()
 
+  @classmethod
+  def from_string(cls, s: str):
+    s = s.strip()
+    s_lower = s.lower()
+
+    if s_lower in ("[nan]", "[nai]", "nai"):
+      return cls.new_nai()
+
+    if "_" in s:
+      interval_part, dec_part = s.rsplit("_", 1)
+      try:
+        dec = Decoration[dec_part.upper()]
+      except KeyError:
+        raise ValueError(f"Unknown Decoration Suffix {dec_part}")
+    else:
+      interval_part = s
+      dec = Decoration.COM
+
+    bare_int = Interval.from_string(interval_part)
+    return cls(bare_int, dec)
+
   @property
   def is_nai(self):
     return self.nai
