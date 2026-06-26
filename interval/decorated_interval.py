@@ -1,6 +1,7 @@
 from .interval import Interval
 from dataclasses import dataclass
 from .decorations import Decoration
+from gmpy2 import mpfr as Number
 
 @dataclass(frozen=True)
 class DecoratedInterval:
@@ -18,8 +19,8 @@ class DecoratedInterval:
       object.__setattr__(self, "decoration", Decoration.TRV)
     
     if self.nai:
-      if self.decoration != Decoration.ILL:
-        raise ValueError("NaI must have decoration ILL")
+      if self.decoration != Decoration.NAI:
+        raise ValueError("NaI must have decoration NAI")
   
   @classmethod
   def empty(cls):
@@ -31,7 +32,7 @@ class DecoratedInterval:
 
   @classmethod
   def new_nai(cls):
-    return cls(Interval.empty(), Decoration.ILL, nai = True)
+    return cls(Interval.empty(), Decoration.NAI, nai = True)
 
   @classmethod
   def _coerce(cls, value):
@@ -63,11 +64,15 @@ class DecoratedInterval:
         dec = Decoration[dec_part.upper()]
       except KeyError:
         raise ValueError(f"Unknown Decoration Suffix {dec_part}")
+      bare_int = Interval.from_string(interval_part)
     else:
-      interval_part = s
-      dec = Decoration.COM
-
-    bare_int = Interval.from_string(interval_part)
+      bare_int = Interval.from_string(s)
+      if bare_int.is_empty:
+        dec = Decoration.TRV
+      elif bare_int.lo == Number('-inf') or bare_int.hi == Number('inf'):
+        dec = Decoration.DAC
+      else:
+        dec = Decoration.COM
     return cls(bare_int, dec)
 
   @property
