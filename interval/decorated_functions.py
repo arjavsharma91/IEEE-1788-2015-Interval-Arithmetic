@@ -1,6 +1,7 @@
 from .decorated_interval import DecoratedInterval
 from .decorations import Decoration, combine
-from .functions import exp as bare_exp, sqrt as bare_sqrt, log as bare_log, pow_int as bare_pow_int, sign as bare_sign, interval_min as bare_interval_min, interval_max as bare_interval_max, nth_root as bare_nth_root, sin as bare_sin, cos as bare_cos, tan as bare_tan, asin as bare_asin, acos as bare_acos, atan as bare_atan, sinh as bare_sinh, cosh as bare_cosh, tanh as bare_tanh, asinh as bare_asinh, acosh as bare_acosh, atanh as bare_atanh, abs as bare_abs, atan2 as bare_atan2 
+from .functions import exp as bare_exp, sqrt as bare_sqrt, log as bare_log, pow_int as bare_pow_int, sign as bare_sign, interval_min as bare_interval_min, interval_max as bare_interval_max, nth_root as bare_nth_root, sin as bare_sin, cos as bare_cos, tan as bare_tan, asin as bare_asin, acos as bare_acos, atan as bare_atan, sinh as bare_sinh, cosh as bare_cosh, tanh as bare_tanh, asinh as bare_asinh, acosh as bare_acosh, atanh as bare_atanh, abs as bare_abs, atan2 as bare_atan2, contains_periodic_point as bare_contains_periodic_point 
+from .constants import PI, HALF_PI, TWO_PI
 
 def exp(x):
   x = DecoratedInterval._coerce(x)
@@ -8,6 +9,9 @@ def exp(x):
     return DecoratedInterval.new_nai()
   interval = bare_exp(x.interval)
   dec = combine(x.decoration)
+
+  if dec == Decoration.COM and not interval.is_bounded:
+    dec = Decoration.DAC
   return DecoratedInterval(interval, dec)
 
 def sqrt(x):
@@ -54,7 +58,7 @@ def pow_int(x, n):
   else:
     op_dec = Decoration.COM
 
-  interval = bare_pow_int(x.interval)
+  interval = bare_pow_int(x.interval, n)
   dec = combine(x.decoration, op_dec)
 
   if dec == Decoration.COM and not interval.is_bounded:
@@ -136,7 +140,7 @@ def sin(x):
     return DecoratedInterval.new_nai()
   op_dec = Decoration.COM
 
-  interval = bare_sin(x)
+  interval = bare_sin(x.interval)
   dec = combine(op_dec, x.decoration)
 
   if dec == Decoration.COM and not interval.is_bounded:
@@ -151,7 +155,7 @@ def cos(x):
     return DecoratedInterval.new_nai()
   op_dec = Decoration.COM
 
-  interval = bare_cos(x)
+  interval = bare_cos(x.interval)
   dec = combine(op_dec, x.decoration)
 
   if dec == Decoration.COM and not interval.is_bounded:
@@ -189,7 +193,7 @@ def asin(x):
   else:
     op_dec = Decoration.COM
 
-  interval = bare_asin(x)
+  interval = bare_asin(x.interval)
   dec = combine(x.decoration, op_dec)
 
   if dec == Decoration.COM and not interval.is_bounded:
@@ -209,7 +213,7 @@ def acos(x):
   else:
     op_dec = Decoration.COM
 
-  interval = bare_acos(x)
+  interval = bare_acos(x.interval)
   dec = combine(x.decoration, op_dec)
 
   if dec == Decoration.COM and not interval.is_bounded:
@@ -220,7 +224,7 @@ def acos(x):
 def atan(x):
   x = DecoratedInterval._coerce(x)
   if x.is_nai:
-    return DecoratedInterval.is_nai()
+    return DecoratedInterval.new_nai()
   op_dec = Decoration.COM
 
   interval = bare_atan(x.interval)
@@ -358,7 +362,7 @@ def atan2(y, x):
     op_dec = Decoration.COM
 
   interval = bare_atan2(y.interval, x.interval)
-  dec = combine(x.decoration, op_dec)
+  dec = combine(x.decoration, op_dec, y.decoration)
 
   if dec == Decoration.COM and not interval.is_bounded:
     dec = Decoration.DAC
