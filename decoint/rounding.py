@@ -2,274 +2,231 @@ from gmpy2 import RoundDown, RoundUp, context, get_context, exp, log, mpfr, sin,
 Number = mpfr
 
 def add_down(a, b):
-    a = Number(a)
-    b = Number(b)
-    with context(get_context()) as ctx:
-        ctx.round = RoundDown
-        return a+b
+    with context(get_context(), round = RoundDown):
+        mpfr_a = Number(a)
+        mpfr_b = Number(b)
+        return mpfr_a + mpfr_b
 
 def add_up(a, b):
-    a = Number(a)
-    b = Number(b)
-    with context(get_context()) as ctx:
-        ctx.round = RoundUp
-        return a+b
+    with context(get_context(), round = RoundUp):
+        mpfr_a = Number(a)
+        mpfr_b = Number(b)
+        return mpfr_a + mpfr_b
 
 def sub_down(a, b):
-    a = Number(a)
-    b = Number(b)
-    with context(get_context()) as ctx:
-        ctx.round = RoundDown
-        return a-b
+    with context(get_context(), round = RoundDown):
+        mpfr_a = Number(a)
+        mpfr_b = Number(b)
+        return mpfr_a - mpfr_b
 
 def sub_up(a, b):
-    a = Number(a)
-    b = Number(b)
-    with context(get_context()) as ctx:
-        ctx.round = RoundUp
-        return a-b
+    with context(get_context(), round = RoundUp):
+        mpfr_a = Number(a)
+        mpfr_b = Number(b)
+        return mpfr_a - mpfr_b
 
 def mul_down(a, b):
-    a = Number(a)
-    b = Number(b)
-    with context(get_context()) as ctx:
-        ctx.round = RoundDown
-        return a*b
+    with context(get_context(), round = RoundDown):
+        mpfr_a = Number(a)
+        mpfr_b = Number(b)
+        return mpfr_a*mpfr_b
 
 def mul_up(a, b):
-    a = Number(a)
-    b = Number(b)
-    with context(get_context()) as ctx:
-        ctx.round = RoundUp
-        return a*b
+    with context(get_context(), round = RoundUp):
+        mpfr_a = Number(a)
+        mpfr_b = Number(b)
+        return mpfr_a*mpfr_b
 
 def div_down(a, b):
-    a = Number(a)
-    b = Number(b)
-    with context(get_context()) as ctx:
-        ctx.round = RoundDown
-        return a / b
+    with context(get_context(), round = RoundDown):
+        mpfr_a = Number(a)
+        mpfr_b = Number(b)
+        return mpfr_a / mpfr_b
 
 def div_up(a, b):
-    a = Number(a)
-    b = Number(b)
-    with context(get_context()) as ctx:
-        ctx.round = RoundUp
-        return a / b
+    with context(get_context(), round = RoundUp):
+        mpfr_a = Number(a)
+        mpfr_b = Number(b)
+        return mpfr_a / mpfr_b
 
 def sqrt_up(a):
-    a = Number(a)
-    with context(get_context()) as ctx:
-        ctx.round = RoundUp
-        return sqrt(a)
+    with context(get_context(), round = RoundUp):
+        mpfr_a = Number(a)
+        return sqrt(mpfr_a)
 
 def sqrt_down(a):
-    a = Number(a)
-    with context(get_context()) as ctx:
-        ctx.round = RoundDown
-        return sqrt(a)
+    with context(get_context(), round = RoundDown):
+        mpfr_a = Number(a)
+        return sqrt(mpfr_a)
 
 def exp_up(a):
-    a = Number(a)
-    with context(get_context()) as ctx:
-        ctx.round = RoundUp
-        return exp(a)
+    with context(get_context(), round = RoundUp):
+        mpfr_a = Number(a)
+        return exp(mpfr_a)
 
 def exp_down(a):
-    a = Number(a)
-    with context(get_context()) as ctx:
-        ctx.round = RoundDown
-        return exp(a)
+    with context(get_context(), round = RoundDown):
+        mpfr_a = Number(a)
+        return exp(mpfr_a)
 
 def log_down(a):
-    a = Number(a)
-    with context(get_context()) as ctx:
-        ctx.round = RoundDown
-        return log(a)
+    with context(get_context(), round = RoundDown):
+        mpfr_a = Number(a)
+        return log(mpfr_a)
 
 def log_up(a):
-    a = Number(a)
-    with context(get_context()) as ctx:
-        ctx.round = RoundUp
-        return log(a)
+    with context(get_context(), round = RoundUp):
+        mpfr_a = Number(a)
+        return log(mpfr_a)
 
 def pow_up(a, n):
-    a = Number(a)
-    with context(get_context()) as ctx:
-        ctx.round = RoundUp
-        return a ** n
+    with context(get_context(), round = RoundUp):
+        mpfr_a = Number(a)
+        return mpfr_a ** n
+
 def pow_down(a, n):
-    a = Number(a)
-    with context(get_context()) as ctx:
-        ctx.round = RoundDown
-        return a ** n
+    with context(get_context(), round = RoundDown):
+        mpfr_a = Number(a)
+        return mpfr_a ** n
 
 def root_up(a, n):
-    a = Number(a)
-    with context(get_context()) as ctx:
-        ctx.round = RoundUp
-        return root(a, int(n))
+    with context(get_context(), round = RoundUp):
+        mpfr_a = Number(a)
+        return root(mpfr_a, int(n))
 
 def root_down(a, n):
-    a = Number(a)
-    with context(get_context()) as ctx:
-        ctx.round = RoundDown
-        return root(a, int(n))
+    with context(get_context(), round = RoundDown):
+        mpfr_a = Number(a)
+        return root(mpfr_a, int(n))
 
 def sin_up(a):
-    a = Number(a)
-    with context(get_context()) as ctx:
-        ctx.round = RoundUp
-        return sin(a)
+    with context(get_context(), round = RoundUp):
+        mpfr_a = Number(a)
+        return sin(mpfr_a)
 
 def sin_down(a):
-    a = Number(a)
-    with context(get_context()) as ctx:
-        ctx.round = RoundDown
-        return sin(a)
+    with context(get_context(), round = RoundDown):
+        mpfr_a = Number(a)
+        return sin(mpfr_a)
 
 def cos_down(a):
-    a = Number(a)
-    with context(get_context()) as ctx:
-        ctx.round = RoundDown
-        return cos(a)
+    with context(get_context(), round = RoundDown):
+        mpfr_a = Number(a)
+        return cos(mpfr_a)
 
 def cos_up(a):
-    a = Number(a)
-    with context(get_context()) as ctx:
-        ctx.round = RoundUp
-        return cos(a)
+    with context(get_context(), round = RoundUp):
+        mpfr_a = Number(a)
+        return cos(mpfr_a)
 
 def tan_up(a):
-    a = Number(a)
-    with context(get_context()) as ctx:
-        ctx.round = RoundUp
-        return tan(a)
+    with context(get_context(), round = RoundUp):
+        mpfr_a = Number(a)
+        return tan(mpfr_a)
 
 def tan_down(a):
-    a = Number(a)
-    with context(get_context()) as ctx:
-        ctx.round = RoundDown
-        return tan(a)
+    with context(get_context(), round = RoundDown):
+        mpfr_a = Number(a)
+        return tan(mpfr_a)
 
 def asin_up(a):
-    a = Number(a)
-    with context(get_context()) as ctx:
-        ctx.round = RoundUp
-        return asin(a)
+    with context(get_context(), round = RoundUp):
+        mpfr_a = Number(a)
+        return asin(mpfr_a)
 
 def asin_down(a):
-    a = Number(a)
-    with context(get_context()) as ctx:
-        ctx.round = RoundDown
-        return asin(a)
+    with context(get_context(), round = RoundDown):
+        mpfr_a = Number(a)
+        return asin(mpfr_a)
 
 def atan_down(a):
-    a = Number(a)
-    with context(get_context()) as ctx:
-        ctx.round = RoundDown
-        return atan(a)
+    with context(get_context(), round = RoundDown):
+        mpfr_a = Number(a)
+        return atan(mpfr_a)
 
 def atan_up(a):
-    a = Number(a)
-    with context(get_context()) as ctx:
-        ctx.round = RoundUp
-        return atan(a)
+    with context(get_context(), round = RoundUp):
+        mpfr_a = Number(a)
+        return atan(mpfr_a)
 
 def acos_up(a):
-    a = Number(a)
-    with context(get_context()) as ctx:
-        ctx.round = RoundUp
-        return acos(a)
+    with context(get_context(), round = RoundUp):
+        mpfr_a = Number(a)
+        return acos(mpfr_a)
 
 def acos_down(a):
-    a = Number(a)
-    with context(get_context()) as ctx:
-        ctx.round = RoundDown
-        return acos(a)
+    with context(get_context(), round = RoundDown):
+        mpfr_a = Number(a)
+        return acos(mpfr_a)
 
 def sinh_up(a):
-    a = Number(a)
-    with context(get_context()) as ctx:
-        ctx.round = RoundUp
-        return sinh(a)
+    with context(get_context(), round = RoundUp):
+        mpfr_a = Number(a)
+        return sinh(mpfr_a)
 
 def sinh_down(a):
-    a = Number(a)
-    with context(get_context()) as ctx:
-        ctx.round = RoundDown
-        return sinh(a)
+    with context(get_context(), round = RoundDown):
+        mpfr_a = Number(a)
+        return sinh(mpfr_a)
 
 def cosh_down(a):
-    a = Number(a)
-    with context(get_context()) as ctx:
-        ctx.round = RoundDown
-        return cosh(a)
+    with context(get_context(), round = RoundDown):
+        mpfr_a = Number(a)
+        return cosh(mpfr_a)
 
 def cosh_up(a):
-    a = Number(a)
-    with context(get_context()) as ctx:
-        ctx.round = RoundUp
-        return cosh(a)
+    with context(get_context(), round = RoundUp):
+        mpfr_a = Number(a)
+        return cosh(mpfr_a)
 
 def tanh_up(a):
-    a = Number(a)
-    with context(get_context()) as ctx:
-        ctx.round = RoundUp
-        return tanh(a)
+    with context(get_context(), round = RoundUp):
+        mpfr_a = Number(a)
+        return tanh(mpfr_a)
 
 def tanh_down(a):
-    a = Number(a)
-    with context(get_context()) as ctx:
-        ctx.round = RoundDown
-        return tanh(a)
+    with context(get_context(), round = RoundDown):
+        mpfr_a = Number(a)
+        return tanh(mpfr_a)
 
 def asinh_up(a):
-    a = Number(a)
-    with context(get_context()) as ctx:
-        ctx.round = RoundUp
-        return asinh(a)
+    with context(get_context(), round = RoundUp):
+        mpfr_a = Number(a)
+        return asinh(mpfr_a)
 
 def asinh_down(a):
-    a = Number(a)
-    with context(get_context()) as ctx:
-        ctx.round = RoundDown
-        return asinh(a)
+    with context(get_context(), round = RoundDown):
+        mpfr_a = Number(a)
+        return asinh(mpfr_a)
 
 def acosh_up(a):
-    a = Number(a)
-    with context(get_context()) as ctx:
-        ctx.round = RoundUp
-        return acosh(a)
+    with context(get_context(), round = RoundUp):
+        mpfr_a = Number(a)
+        return acosh(mpfr_a)
 
 def acosh_down(a):
-    a = Number(a)
-    with context(get_context()) as ctx:
-        ctx.round = RoundDown
-        return acosh(a)
+    with context(get_context(), round = RoundDown):
+        mpfr_a = Number(a)
+        return acosh(mpfr_a)
 
 def atanh_up(a):
-    a = Number(a)
-    with context(get_context()) as ctx:
-        ctx.round = RoundUp
-        return atanh(a)
+    with context(get_context(), round = RoundUp):
+        mpfr_a = Number(a)
+        return atanh(mpfr_a)
 
 def atanh_down(a):
-    a = Number(a)
-    with context(get_context()) as ctx:
-        ctx.round = RoundDown
-        return atanh(a)
+    with context(get_context(), round = RoundDown):
+        mpfr_a = Number(a)
+        return atanh(mpfr_a)
 
 def atan2_down(y, x):
-    x = Number(x)
-    y = Number(y)
-    with context(get_context()) as ctx:
-        ctx.round = RoundDown
-        return atan2(y, x)
+    with context(get_context(), round = RoundDown):
+        mpfr_x = Number(x)
+        mpfr_y = Number(y)
+        return atan2(mpfr_y, mpfr_x)
 
 def atan2_up(y, x):
-    x = Number(x)
-    y = Number(y)
-    with context(get_context()) as ctx:
-        ctx.round = RoundUp
-        return atan2(y, x)
+    with context(get_context(), round = RoundUp):
+        mpfr_x = Number(x)
+        mpfr_y = Number(y)
+        return atan2(mpfr_y, mpfr_x)
