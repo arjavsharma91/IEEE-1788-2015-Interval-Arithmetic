@@ -84,4 +84,3 @@ def div(x, y):
   dec = _finalize_decoration(dec, interval)
 
   return DecoratedInterval(interval, dec)
-  
