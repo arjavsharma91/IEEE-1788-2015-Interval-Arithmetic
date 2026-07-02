@@ -1,5 +1,5 @@
 from .interval import Interval
-from .rounding import add_up, add_down, sub_up, sub_down, mul_up, mul_down, div_up, div_down, sqrt_up, sqrt_down, exp_down, exp_up, log_up, log_down, pow_up, pow_down, root_up, root_down, sin_up, sin_down, tan_up, tan_down, asin_up, asin_down, acos_up, acos_down, atan_up, atan_down, sinh_up, sinh_down, cosh_up, cosh_down, tanh_up, tanh_down, atanh_up, atanh_down, asinh_up, asinh_down, acosh_up, acosh_down
+from .rounding import add_up, add_down, sub_up, sub_down, mul_up, mul_down, div_up, div_down, sqrt_up, sqrt_down, exp_down, exp_up, log_up, log_down, pow_up, pow_down, root_up, root_down, sin_up, sin_down, tan_up, tan_down, asin_up, asin_down, acos_up, acos_down, atan_up, atan_down, sinh_up, sinh_down, cosh_up, cosh_down, tanh_up, tanh_down, atanh_up, atanh_down, asinh_up, asinh_down, acosh_up, acosh_down, cos_up, cos_down, sqr_up, sqr_down
 from gmpy2 import mpfr, floor, ceil
 from .arithmetic import reciprocal
 from .constants import PI, TWO_PI, HALF_PI
@@ -159,6 +159,8 @@ def tan(x):
   x = Interval._coerce(x)
   if x.is_empty:
     return Interval.empty()
+  if x.width >= PI:
+    return Interval.entire()
   if contains_periodic_point(x, HALF_PI, PI):
     return Interval.entire()
   lo = tan_down(x.lo)
@@ -280,4 +282,19 @@ def atan2(x, y):
   c4_lo, c4_hi = atan2_down(y.hi, x.hi), atan2_up(y.hi, x.hi)
 
   return Interval(min(c1_lo, c2_lo, c3_lo, c4_lo), max(c1_hi, c2_hi, c3_hi, c4_hi))
+
+def sqr(x):
+  x = Interval._coerce(x)
+  if x.is_empty:
+    return Interval.empty()
+  if x.lo >= 0:
+    lo = sqr_down(x.lo)
+    hi = sqr_up(x.hi)
+    return Interval(lo, hi)
+  elif x.hi <= 0:
+    lo = sqr_down(builtins.abs(x.hi))
+    hi = sqr_up(builtins.abs(x.lo))
+    return Interval(lo, hi)
+  hi = max(sqr_up(builtins.abs(x.hi)), sqr_up(builtins.abs(x.lo)))
+  return Interval(mpfr(0), hi)
 
