@@ -1,4 +1,4 @@
-from gmpy2 import RoundDown, RoundUp, context, get_context, exp, log, mpfr, sin, cos, asin, atan, acos, tan, sqrt, sinh, tanh, cosh, asinh, acosh, atanh, atan2, root
+from gmpy2 import RoundDown, RoundUp, context, get_context, exp, log, mpfr, sin, cos, asin, atan, acos, tan, sqrt, sinh, tanh, cosh, asinh, acosh, atanh, atan2, root, square
 Number = mpfr
 
 def add_down(a, b):
@@ -230,3 +230,13 @@ def atan2_up(y, x):
         mpfr_x = Number(x)
         mpfr_y = Number(y)
         return atan2(mpfr_y, mpfr_x)
+
+def sqr_up(a):
+    with context(get_context(), round = RoundUp):
+        mpfr_a = Number(a)
+        return square(mpfr_a)
+
+def sqr_down(a):
+    with context(get_context(), round = RoundDown):
+        mpfr_a = Number(a)
+        return square(mpfr_a)
